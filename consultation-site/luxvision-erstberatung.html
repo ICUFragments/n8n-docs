@@ -10,8 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
 :root {
-  --bg: #0f1115;
-  --bg-alt: #15181f;
+  --bg: #0e1014;
+  --bg-alt: #14171e;
   --surface: #1b1f29;
   --surface-2: #20242f;
   --ink: #f3f1ea;
@@ -20,6 +20,8 @@
   --line: rgba(255, 255, 255, 0.09);
   --gold: #c9a96a;
   --gold-soft: #e3cf9f;
+  --violet: #8b7cf0;
+  --teal: #5fd0c5;
   --radius: 16px;
   --radius-sm: 10px;
   --max: 1120px;
@@ -27,7 +29,6 @@
 }
 
 * { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -37,6 +38,7 @@ body {
   color: var(--ink);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
@@ -48,48 +50,41 @@ h3 { font-size: 1.2rem; margin: 0 0 .5rem; }
 
 a { color: inherit; text-decoration: none; }
 
-.eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: var(--gold);
-  margin: 0 0 0.8rem;
-}
+.eyebrow { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.74rem; font-weight: 600; color: var(--gold); margin: 0 0 0.8rem; }
 .center { text-align: center; }
 .section-lead { color: var(--ink-soft); max-width: 640px; font-size: 1.05rem; }
 .center.section-lead { margin-left: auto; margin-right: auto; }
 
-/* Buttons */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: .5rem; padding: 0.85rem 1.4rem; border-radius: 999px;
-  font-weight: 600; font-size: 0.95rem; cursor: pointer; border: 1px solid transparent;
-  transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); will-change: opacity, transform; }
+.reveal.in { opacity: 1; transform: none; }
+.cards .reveal:nth-child(2), .gallery .reveal:nth-child(2) { transition-delay: .07s; }
+.cards .reveal:nth-child(3), .gallery .reveal:nth-child(3) { transition-delay: .14s; }
+.cards .reveal:nth-child(4), .gallery .reveal:nth-child(4) { transition-delay: .21s; }
+.gallery .reveal:nth-child(5) { transition-delay: .28s; }
+.gallery .reveal:nth-child(6) { transition-delay: .35s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  *, *::before, *::after { animation: none !important; }
 }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: 0.85rem 1.4rem; border-radius: 999px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: 1px solid transparent; transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease; }
 .btn:hover { transform: translateY(-2px); }
 .btn-primary { background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; }
 .btn-primary:hover { box-shadow: 0 12px 30px -10px rgba(201, 169, 106, 0.6); }
-.btn-ghost { color: var(--ink); border-color: var(--line); background: transparent; }
+.btn-ghost { color: var(--ink); border-color: var(--line); background: rgba(255,255,255,.02); }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold-soft); }
 .btn-outline { color: var(--gold-soft); border-color: var(--gold); background: transparent; }
 .btn-outline:hover { background: rgba(201, 169, 106, 0.1); }
 .btn-block { width: 100%; }
 
 /* Header */
-.site-header {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(15, 17, 21, 0.82);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
-}
+.site-header { position: sticky; top: 0; z-index: 50; background: rgba(14, 16, 20, 0.7); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
 .brand { display: flex; align-items: center; gap: .6rem; font-weight: 600; }
-.brand-mark {
-  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px;
-  background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407;
-  font-family: "Fraunces", serif; font-weight: 600; font-size: .95rem;
-}
+.brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; font-family: "Fraunces", serif; font-weight: 600; font-size: .95rem; }
 .brand-name { font-family: "Fraunces", serif; font-size: 1.1rem; letter-spacing: -0.01em; }
 .brand-name em { font-style: normal; color: var(--gold); }
 .nav { display: flex; align-items: center; gap: 1.6rem; }
@@ -100,21 +95,57 @@ a { color: inherit; text-decoration: none; }
 .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 8px; }
 .nav-toggle span { width: 24px; height: 2px; background: var(--ink); border-radius: 2px; transition: .2s; }
 
-/* Hero */
-.hero {
-  position: relative; padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(3rem, 6vw, 5rem);
-  background:
-    radial-gradient(900px 500px at 78% -10%, rgba(201, 169, 106, 0.16), transparent 60%),
-    radial-gradient(700px 400px at 10% 10%, rgba(201, 169, 106, 0.07), transparent 55%);
-  overflow: hidden;
-}
-.hero-inner { max-width: 820px; }
-.hero-sub { font-size: clamp(1.05rem, 2vw, 1.2rem); color: var(--ink-soft); max-width: 640px; margin: 0 0 2rem; }
+/* ---------- Hero ---------- */
+.hero { position: relative; padding: clamp(3.5rem, 8vw, 6.5rem) 0 clamp(3rem, 6vw, 5rem); overflow: hidden; }
+.hero-inner { position: relative; z-index: 2; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.hero-copy { max-width: 600px; }
+.hero-sub { font-size: clamp(1.05rem, 2vw, 1.2rem); color: var(--ink-soft); max-width: 560px; margin: 0 0 2rem; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-bottom: 1.2rem; }
 .hero-note { font-size: .9rem; color: var(--ink-dim); margin: 0; }
 
+/* Aurora background */
+.aurora { position: absolute; inset: -20% -10% auto -10%; height: 130%; z-index: 0; filter: blur(60px); opacity: .55; pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 75% 25%, rgba(201,169,106,.55), transparent 60%),
+    radial-gradient(38% 45% at 25% 30%, rgba(139,124,240,.40), transparent 60%),
+    radial-gradient(42% 50% at 60% 70%, rgba(95,208,197,.30), transparent 60%);
+  background-size: 200% 200%, 180% 180%, 220% 220%;
+  animation: auroraShift 18s ease-in-out infinite alternate;
+}
+@keyframes auroraShift {
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
+  50%  { background-position: 60% 40%, 30% 60%, 80% 20%; }
+  100% { background-position: 100% 100%, 0% 100%, 20% 60%; }
+}
+/* Subtle grain */
+.grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* Hero visual mosaic */
+.hero-visual { position: relative; height: clamp(300px, 38vw, 420px); }
+.hero-visual .orb { position: absolute; width: 220px; height: 220px; right: 8%; top: 12%; border-radius: 50%; filter: blur(8px); opacity: .8;
+  background: conic-gradient(from 120deg, var(--gold-soft), var(--violet), var(--teal), var(--gold-soft));
+  animation: orbSpin 14s linear infinite; }
+@keyframes orbSpin { to { transform: rotate(360deg); } }
+.render-card { position: absolute; margin: 0; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 30px 60px -30px rgba(0,0,0,.8); backdrop-filter: blur(2px); }
+.render-card .tag { position: absolute; left: 10px; bottom: 10px; font-size: .72rem; font-weight: 600; letter-spacing: .04em; padding: .25rem .6rem; border-radius: 999px; background: rgba(0,0,0,.45); color: #fff; backdrop-filter: blur(6px); }
+.render-art { width: 100%; height: 100%; background-size: 180% 180%; animation: hueDrift 12s ease-in-out infinite alternate; }
+.rc-1 { width: 56%; height: 64%; left: 0; top: 6%; animation: float1 9s ease-in-out infinite; z-index: 3; }
+.rc-2 { width: 44%; height: 50%; right: 2%; top: 0; animation: float2 11s ease-in-out infinite; z-index: 2; }
+.rc-3 { width: 50%; height: 46%; right: 6%; bottom: 2%; animation: float1 10s ease-in-out infinite; z-index: 4; }
+.art-1 { background-image: radial-gradient(120% 90% at 20% 10%, #e3cf9f 0%, #b07c3a 40%, #2a1f12 100%); }
+.art-2 { background-image: radial-gradient(120% 100% at 80% 20%, #b7aef7 0%, #6a5acd 45%, #1d1830 100%); }
+.art-3 { background-image: radial-gradient(120% 100% at 30% 80%, #8be6db 0%, #2f8f86 45%, #10231f 100%); }
+@keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
+@keyframes hueDrift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.render-chip { position: absolute; left: 4%; bottom: -6%; z-index: 5; display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 600; color: var(--ink); padding: .5rem .9rem; border-radius: 999px; background: rgba(20,23,30,.8); border: 1px solid var(--line); backdrop-filter: blur(8px); }
+.render-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 0 rgba(95,208,197,.6); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(95,208,197,.55); } 70% { box-shadow: 0 0 0 8px rgba(95,208,197,0); } 100% { box-shadow: 0 0 0 0 rgba(95,208,197,0); } }
+
 /* Trust strip */
-.strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-alt); }
+.strip { position: relative; z-index: 2; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-alt); }
 .strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1.6rem 24px; }
 .strip-inner div { display: flex; flex-direction: column; }
 .strip-inner strong { font-family: "Fraunces", serif; font-size: 1.1rem; color: var(--gold-soft); }
@@ -126,41 +157,55 @@ a { color: inherit; text-decoration: none; }
 
 /* Cards */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
-.card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 1.8rem 1.6rem; transition: transform .2s ease, border-color .2s ease;
-}
-.card:hover { transform: translateY(-4px); border-color: rgba(201, 169, 106, 0.4); }
-.card-icon {
-  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px;
-  background: rgba(201, 169, 106, 0.12); color: var(--gold-soft); font-size: 1.5rem; margin-bottom: 1.1rem;
-}
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem 1.6rem; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.card:hover { transform: translateY(-6px); border-color: rgba(201, 169, 106, 0.45); box-shadow: 0 24px 50px -34px rgba(201,169,106,.5); }
+.card-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: rgba(201, 169, 106, 0.12); color: var(--gold-soft); font-size: 1.5rem; margin-bottom: 1.1rem; }
 .card p { color: var(--ink-soft); font-size: .96rem; margin: 0; }
+
+/* ---------- Gallery with scroll zoom ---------- */
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 2.5rem; }
+.shot { position: relative; margin: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); aspect-ratio: 4 / 5; }
+.shot figcaption { position: absolute; left: 14px; bottom: 12px; z-index: 2; font-size: .85rem; font-weight: 600; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+.shot::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,.45)); }
+.shot-art { position: absolute; inset: -6%; background-size: 160% 160%; transform: scale(1.05); }
+.s1 { background-image: radial-gradient(120% 100% at 25% 15%, #e9d6a6, #c08a3e 45%, #2a1d10); }
+.s2 { background-image: radial-gradient(120% 100% at 70% 20%, #b7aef7, #5a4fd0 45%, #181333); }
+.s3 { background-image: radial-gradient(120% 100% at 40% 80%, #f0b9c7, #b15a78 45%, #2a1320); }
+.s4 { background-image: radial-gradient(120% 100% at 75% 75%, #8be6db, #2f8f86 45%, #102320); }
+.s5 { background-image: radial-gradient(120% 100% at 20% 30%, #f2c28a, #c47b3a 40%, #2a1c0f); }
+.s6 { background-image: radial-gradient(120% 100% at 60% 40%, #a9c0f0, #5b6fc0 45%, #141c33); }
+
+/* Scroll-driven zoom in/out (modern browsers, incl. Chrome). Falls back gracefully. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .shot-art { animation: zoomInOut linear both; animation-timeline: view(); animation-range: cover; }
+    @keyframes zoomInOut {
+      0%   { transform: scale(1.22) translateY(2%); }
+      50%  { transform: scale(1.02) translateY(0); }
+      100% { transform: scale(1.22) translateY(-2%); }
+    }
+    .hero-visual { animation: heroParallax linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+    @keyframes heroParallax { to { transform: translateY(-8%) scale(.97); opacity: .85; } }
+  }
+}
 
 /* Steps */
 .steps { list-style: none; counter-reset: step; padding: 0; margin: 2.5rem 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
 .steps li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem 1.6rem; position: relative; }
-.step-num {
-  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407;
-  font-family: "Fraunces", serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;
-}
+.step-num { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; font-family: "Fraunces", serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; }
 .steps p { color: var(--ink-soft); font-size: .96rem; margin: 0; }
 
 /* Two col */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
 .check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
 .check-list li { position: relative; padding-left: 2rem; color: var(--ink-soft); }
-.check-list li::before {
-  content: "✓"; position: absolute; left: 0; top: 0;
-  color: var(--gold); font-weight: 700;
-  display: grid; place-items: center; width: 1.4rem; height: 1.4rem;
-}
+.check-list li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--gold); font-weight: 700; display: grid; place-items: center; width: 1.4rem; height: 1.4rem; }
 .check-list strong { color: var(--ink); }
 
 /* Pricing */
 .pricing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; max-width: 780px; margin: 2.5rem auto 0; }
-.price-card { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 1.8rem; display: flex; flex-direction: column; }
+.price-card { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 1.8rem; display: flex; flex-direction: column; transition: transform .25s ease; }
+.price-card:hover { transform: translateY(-4px); }
 .price-card.featured { border-color: var(--gold); background: linear-gradient(180deg, rgba(201,169,106,0.08), var(--surface)); }
 .badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: .3rem .9rem; border-radius: 999px; }
 .price { font-family: "Fraunces", serif; font-size: 2rem; margin: .6rem 0 0; }
@@ -172,20 +217,15 @@ a { color: inherit; text-decoration: none; }
 .price-foot { color: var(--ink-dim); margin-top: 2rem; }
 
 /* Booking */
-.booking { background: radial-gradient(700px 500px at 85% 0%, rgba(201,169,106,0.1), transparent 60%); }
+.booking { position: relative; background: radial-gradient(700px 500px at 85% 0%, rgba(201,169,106,0.1), transparent 60%); }
 .booking-inner { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
 .booking-intro p { color: var(--ink-soft); }
 .booking-points { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: .6rem; color: var(--gold-soft); font-weight: 500; }
-
 .booking-form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.6rem, 3vw, 2.2rem); box-shadow: var(--shadow); }
 .field { display: flex; flex-direction: column; margin-bottom: 1.1rem; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 label { font-size: .9rem; font-weight: 500; margin-bottom: .4rem; color: var(--ink-soft); }
-input, select, textarea {
-  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
-  padding: .8rem .9rem; color: var(--ink); font-family: inherit; font-size: .98rem; width: 100%;
-  transition: border-color .15s ease, box-shadow .15s ease;
-}
+input, select, textarea { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .8rem .9rem; color: var(--ink); font-family: inherit; font-size: .98rem; width: 100%; transition: border-color .15s ease, box-shadow .15s ease; }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,106,0.18); }
 input::placeholder, textarea::placeholder { color: var(--ink-dim); }
 textarea { resize: vertical; }
@@ -197,7 +237,8 @@ textarea { resize: vertical; }
 input.invalid, select.invalid { border-color: #f0907a; }
 
 /* Success */
-.booking-success { background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius); padding: clamp(1.8rem, 4vw, 2.6rem); text-align: center; box-shadow: var(--shadow); }
+.booking-success { background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius); padding: clamp(1.8rem, 4vw, 2.6rem); text-align: center; box-shadow: var(--shadow); animation: popIn .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes popIn { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
 .success-icon { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1.2rem; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; font-size: 1.8rem; font-weight: 700; }
 .booking-success p { color: var(--ink-soft); }
 .success-summary { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem 1.2rem; margin: 1.4rem 0; text-align: left; font-size: .92rem; }
@@ -222,14 +263,17 @@ input.invalid, select.invalid { border-color: #f0907a; }
   .nav a { padding: .8rem 0; width: 100%; border-bottom: 1px solid var(--line); }
   .nav .nav-cta { text-align: center; margin-top: .8rem; border-bottom: 0; }
   .nav-toggle { display: flex; }
-  .two-col, .booking-inner { grid-template-columns: 1fr; }
+  .hero-inner, .two-col, .booking-inner { grid-template-columns: 1fr; }
+  .hero-visual { order: -1; height: 300px; margin-bottom: 1rem; }
   .steps { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
   .strip-inner { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 520px) {
   .field-row { grid-template-columns: 1fr; }
   .pricing { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: 1fr 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; gap: .5rem; }
 }
@@ -245,6 +289,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
       </a>
       <nav class="nav" aria-label="Hauptnavigation">
         <a href="#leistungen">Leistungen</a>
+        <a href="#galerie">Galerie</a>
         <a href="#vorgehen">Vorgehen</a>
         <a href="#preise">Preise</a>
         <a href="#termin" class="nav-cta">Termin buchen</a>
@@ -258,44 +303,56 @@ input.invalid, select.invalid { border-color: #f0907a; }
   <main>
     <!-- HERO -->
     <section class="hero">
+      <div class="aurora" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
       <div class="container hero-inner">
-        <p class="eyebrow">KI-gestützte Bildproduktion</p>
-        <h1>Professionelle Produktbilder &amp; Werbemittel –<br>ohne aufwändiges Foto-Shooting.</h1>
-        <p class="hero-sub">
-          Wir sind ein kleines Studio für KI-gestützte Produkt- und Markenbilder.
-          Wir helfen Online-Shops und jungen Marken, hochwertige Shop-Fotos und Anzeigen-Motive
-          zu bekommen – schneller und planbarer als ein klassisches Shooting, zu einem fairen Preis.
-        </p>
-        <div class="hero-actions">
-          <a href="#termin" class="btn btn-primary">Unverbindliche Erstberatung buchen</a>
-          <a href="#leistungen" class="btn btn-ghost">Was wir machen</a>
+        <div class="hero-copy">
+          <p class="eyebrow reveal">KI-gestützte Bildproduktion</p>
+          <h1 class="reveal">Professionelle Produktbilder &amp; Werbemittel –<br>ohne aufwändiges Foto-Shooting.</h1>
+          <p class="hero-sub reveal">
+            Wir sind ein kleines Studio für KI-gestützte Produkt- und Markenbilder.
+            Wir helfen Online-Shops und jungen Marken, hochwertige Shop-Fotos und Anzeigen-Motive
+            zu bekommen – schneller und planbarer als ein klassisches Shooting, zu einem fairen Preis.
+          </p>
+          <div class="hero-actions reveal">
+            <a href="#termin" class="btn btn-primary">Unverbindliche Erstberatung buchen</a>
+            <a href="#galerie" class="btn btn-ghost">Bildsprache ansehen</a>
+          </div>
+          <p class="hero-note reveal">Kostenlos &amp; unverbindlich · ca. 30 Minuten · per Video-Call oder Telefon</p>
         </div>
-        <p class="hero-note">Kostenlos &amp; unverbindlich · ca. 30 Minuten · per Video-Call oder Telefon</p>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="orb"></div>
+          <figure class="render-card rc-1"><div class="render-art art-1"></div><span class="tag">Produkt</span></figure>
+          <figure class="render-card rc-2"><div class="render-art art-2"></div><span class="tag">Lifestyle</span></figure>
+          <figure class="render-card rc-3"><div class="render-art art-3"></div><span class="tag">Editorial</span></figure>
+          <div class="render-chip"><span class="dot"></span>KI-Render · live</div>
+        </div>
       </div>
     </section>
 
     <!-- TRUST STRIP -->
     <section class="strip">
       <div class="container strip-inner">
-        <div><strong>In Tagen</strong><span>statt Wochen Vorlauf</span></div>
-        <div><strong>Faire Preise</strong><span>transparent &amp; planbar</span></div>
-        <div><strong>Viele Varianten</strong><span>ideal für A/B-Tests</span></div>
-        <div><strong>Persönlich</strong><span>direkter Ansprechpartner</span></div>
+        <div class="reveal"><strong>In Tagen</strong><span>statt Wochen Vorlauf</span></div>
+        <div class="reveal"><strong>Faire Preise</strong><span>transparent &amp; planbar</span></div>
+        <div class="reveal"><strong>Viele Varianten</strong><span>ideal für A/B-Tests</span></div>
+        <div class="reveal"><strong>Persönlich</strong><span>direkter Ansprechpartner</span></div>
       </div>
     </section>
 
     <!-- LEISTUNGEN -->
     <section id="leistungen" class="section">
       <div class="container">
-        <p class="eyebrow center">Leistungen</p>
-        <h2 class="center">Was wir für dich produzieren</h2>
-        <p class="section-lead center">
+        <p class="eyebrow center reveal">Leistungen</p>
+        <h2 class="center reveal">Was wir für dich produzieren</h2>
+        <p class="section-lead center reveal">
           Vom sauberen Produktbild bis zur fertigen Anzeige – wir liefern Bildmaterial,
           das du direkt in Shop und Kampagnen einsetzen kannst.
         </p>
 
         <div class="cards">
-          <article class="card">
+          <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◧</div>
             <h3>Produktbilder für den Shop</h3>
             <p>
@@ -304,7 +361,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
             </p>
           </article>
 
-          <article class="card">
+          <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◰</div>
             <h3>Lifestyle- &amp; Szenenbilder</h3>
             <p>
@@ -313,7 +370,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
             </p>
           </article>
 
-          <article class="card">
+          <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◳</div>
             <h3>Werbemittel &amp; Ad Creatives</h3>
             <p>
@@ -322,7 +379,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
             </p>
           </article>
 
-          <article class="card">
+          <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◱</div>
             <h3>Laufende Content-Begleitung</h3>
             <p>
@@ -334,24 +391,45 @@ input.invalid, select.invalid { border-color: #f0907a; }
       </div>
     </section>
 
-    <!-- VORGEHEN -->
-    <section id="vorgehen" class="section section-alt">
+    <!-- GALERIE / SHOWCASE -->
+    <section id="galerie" class="section section-alt showcase">
       <div class="container">
-        <p class="eyebrow center">So läuft's ab</p>
-        <h2 class="center">In drei Schritten zu fertigen Bildern</h2>
+        <p class="eyebrow center reveal">Galerie</p>
+        <h2 class="center reveal">Ein Eindruck unserer Bildsprache</h2>
+        <p class="section-lead center reveal">
+          Abstrakte Vorschau-Motive – beim Scrollen bewegen sie sich sanft.
+          Im Erstgespräch zeigen wir dir Beispiele, die zu deinen Produkten passen.
+        </p>
+
+        <div class="gallery">
+          <figure class="shot reveal"><div class="shot-art s1"></div><figcaption>Produktstudio</figcaption></figure>
+          <figure class="shot reveal"><div class="shot-art s2"></div><figcaption>Lifestyle</figcaption></figure>
+          <figure class="shot reveal"><div class="shot-art s3"></div><figcaption>Editorial</figcaption></figure>
+          <figure class="shot reveal"><div class="shot-art s4"></div><figcaption>Beauty &amp; Detail</figcaption></figure>
+          <figure class="shot reveal"><div class="shot-art s5"></div><figcaption>Ad Creative</figcaption></figure>
+          <figure class="shot reveal"><div class="shot-art s6"></div><figcaption>Markenwelt</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- VORGEHEN -->
+    <section id="vorgehen" class="section">
+      <div class="container">
+        <p class="eyebrow center reveal">So läuft's ab</p>
+        <h2 class="center reveal">In drei Schritten zu fertigen Bildern</h2>
 
         <ol class="steps">
-          <li>
+          <li class="reveal">
             <span class="step-num">1</span>
             <h3>Erstgespräch</h3>
             <p>Wir schauen uns deine Produkte und Ziele an und klären, was sinnvoll ist – ehrlich und unverbindlich.</p>
           </li>
-          <li>
+          <li class="reveal">
             <span class="step-num">2</span>
             <h3>Produktion</h3>
             <p>Wir erstellen erste Motive, du gibst Feedback. Anpassungen sind eingeplant, bis es passt.</p>
           </li>
-          <li>
+          <li class="reveal">
             <span class="step-num">3</span>
             <h3>Übergabe</h3>
             <p>Du bekommst die fertigen Dateien in den passenden Formaten – bereit für Shop und Kampagne.</p>
@@ -361,35 +439,35 @@ input.invalid, select.invalid { border-color: #f0907a; }
     </section>
 
     <!-- WARUM -->
-    <section class="section">
+    <section class="section section-alt">
       <div class="container two-col">
         <div>
-          <p class="eyebrow">Warum KI-Bilder?</p>
-          <h2>Ehrlich gesagt: weil es Zeit und Geld spart.</h2>
-          <p class="section-lead">
+          <p class="eyebrow reveal">Warum KI-Bilder?</p>
+          <h2 class="reveal">Ehrlich gesagt: weil es Zeit und Geld spart.</h2>
+          <p class="section-lead reveal">
             Ein klassisches Shooting mit Set, Model und Location ist teuer und braucht Wochen Vorlauf.
             Für viele Shops steht das in keinem Verhältnis zum Bedarf an frischem Bildmaterial.
             Wir liefern eine pragmatische Alternative – nicht für jede Aufgabe, aber für überraschend viele.
           </p>
         </div>
         <ul class="check-list">
-          <li><strong>Schneller verfügbar.</strong> Erste Ergebnisse oft in wenigen Tagen statt nach langer Planung.</li>
-          <li><strong>Planbare Kosten.</strong> Keine Reise-, Set- oder Model-Budgets, die aus dem Ruder laufen.</li>
-          <li><strong>Flexibel im Test.</strong> Viele Varianten eines Motivs für A/B-Tests, ohne neues Shooting.</li>
-          <li><strong>Ehrliche Einschätzung.</strong> Wenn ein echtes Foto besser passt, sagen wir das auch.</li>
+          <li class="reveal"><strong>Schneller verfügbar.</strong> Erste Ergebnisse oft in wenigen Tagen statt nach langer Planung.</li>
+          <li class="reveal"><strong>Planbare Kosten.</strong> Keine Reise-, Set- oder Model-Budgets, die aus dem Ruder laufen.</li>
+          <li class="reveal"><strong>Flexibel im Test.</strong> Viele Varianten eines Motivs für A/B-Tests, ohne neues Shooting.</li>
+          <li class="reveal"><strong>Ehrliche Einschätzung.</strong> Wenn ein echtes Foto besser passt, sagen wir das auch.</li>
         </ul>
       </div>
     </section>
 
     <!-- PREISE -->
-    <section id="preise" class="section section-alt">
+    <section id="preise" class="section">
       <div class="container">
-        <p class="eyebrow center">Preise</p>
-        <h2 class="center">Transparente Pakete</h2>
-        <p class="section-lead center">Klare Startpreise, keine versteckten Kosten. Den genauen Umfang klären wir im Erstgespräch.</p>
+        <p class="eyebrow center reveal">Preise</p>
+        <h2 class="center reveal">Transparente Pakete</h2>
+        <p class="section-lead center reveal">Klare Startpreise, keine versteckten Kosten. Den genauen Umfang klären wir im Erstgespräch.</p>
 
         <div class="pricing">
-          <article class="price-card">
+          <article class="price-card reveal">
             <h3>Visual-Identity-Paket</h3>
             <p class="price"><span>ab</span> 1.000&nbsp;€</p>
             <p class="price-meta">einmalig</p>
@@ -402,7 +480,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
             <a href="#termin" class="btn btn-outline">Dazu beraten lassen</a>
           </article>
 
-          <article class="price-card featured">
+          <article class="price-card featured reveal">
             <span class="badge">Beliebt</span>
             <h3>Retainer / Content-Begleitung</h3>
             <p class="price">nach Absprache</p>
@@ -416,7 +494,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
             <a href="#termin" class="btn btn-primary">Angebot anfragen</a>
           </article>
         </div>
-        <p class="price-foot center">Du bist unsicher, was passt? Genau dafür ist die kostenlose Erstberatung da.</p>
+        <p class="price-foot center reveal">Du bist unsicher, was passt? Genau dafür ist die kostenlose Erstberatung da.</p>
       </div>
     </section>
 
@@ -424,20 +502,20 @@ input.invalid, select.invalid { border-color: #f0907a; }
     <section id="termin" class="section booking">
       <div class="container booking-inner">
         <div class="booking-intro">
-          <p class="eyebrow">Erstberatung</p>
-          <h2>Unverbindlichen Termin buchen</h2>
-          <p>
+          <p class="eyebrow reveal">Erstberatung</p>
+          <h2 class="reveal">Unverbindlichen Termin buchen</h2>
+          <p class="reveal">
             In etwa 30 Minuten schauen wir uns gemeinsam an, was für deine Produkte sinnvoll ist.
             Kostenlos, ohne Verpflichtung – am Ende weißt du, ob und wie wir helfen können.
           </p>
-          <ul class="booking-points">
+          <ul class="booking-points reveal">
             <li>✓ Kostenlos &amp; unverbindlich</li>
             <li>✓ Per Video-Call oder Telefon</li>
             <li>✓ Ehrliche Einschätzung statt Verkaufsgespräch</li>
           </ul>
         </div>
 
-        <form class="booking-form" id="bookingForm" novalidate>
+        <form class="booking-form reveal" id="bookingForm" novalidate>
           <div class="field">
             <label for="name">Name *</label>
             <input type="text" id="name" name="name" autocomplete="name" required />
@@ -526,6 +604,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
       <div class="footer-col">
         <h4>Seiten</h4>
         <a href="#leistungen">Leistungen</a>
+        <a href="#galerie">Galerie</a>
         <a href="#vorgehen">Vorgehen</a>
         <a href="#preise">Preise</a>
         <a href="#termin">Termin buchen</a>
@@ -545,6 +624,26 @@ input.invalid, select.invalid { border-color: #f0907a; }
   <script>
 // Jahr im Footer
 document.getElementById("year").textContent = new Date().getFullYear();
+
+// Scroll-Reveal: Elemente sanft einblenden, sobald sie sichtbar werden
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const revealEls = document.querySelectorAll(".reveal");
+if (reduceMotion || !("IntersectionObserver" in window)) {
+  revealEls.forEach((el) => el.classList.add("in"));
+} else {
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+  );
+  revealEls.forEach((el) => io.observe(el));
+}
 
 // Mobile-Navigation
 const toggle = document.querySelector(".nav-toggle");
