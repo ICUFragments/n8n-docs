@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LuxVision Digital – Produkt- &amp; Markenbilder mit KI</title>
+  <meta name="description" content="Kleines Studio für KI-gestützte Produkt- und Markenbilder. Professionelle Shop-Fotos und Werbemittel ohne aufwändige Shootings. Jetzt unverbindliche Erstberatung buchen." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+:root {
+  --bg: #0f1115;
+  --bg-alt: #15181f;
+  --surface: #1b1f29;
+  --surface-2: #20242f;
+  --ink: #f3f1ea;
+  --ink-soft: #b9bcc6;
+  --ink-dim: #8b8f9a;
+  --line: rgba(255, 255, 255, 0.09);
+  --gold: #c9a96a;
+  --gold-soft: #e3cf9f;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --max: 1120px;
+  --shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+h1, h2, h3, h4 { font-family: "Fraunces", Georgia, serif; font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0 0 1rem; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin: 0 0 1rem; }
+h3 { font-size: 1.2rem; margin: 0 0 .5rem; }
+
+a { color: inherit; text-decoration: none; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 0 0 0.8rem;
+}
+.center { text-align: center; }
+.section-lead { color: var(--ink-soft); max-width: 640px; font-size: 1.05rem; }
+.center.section-lead { margin-left: auto; margin-right: auto; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: .5rem; padding: 0.85rem 1.4rem; border-radius: 999px;
+  font-weight: 600; font-size: 0.95rem; cursor: pointer; border: 1px solid transparent;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary { background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; }
+.btn-primary:hover { box-shadow: 0 12px 30px -10px rgba(201, 169, 106, 0.6); }
+.btn-ghost { color: var(--ink); border-color: var(--line); background: transparent; }
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold-soft); }
+.btn-outline { color: var(--gold-soft); border-color: var(--gold); background: transparent; }
+.btn-outline:hover { background: rgba(201, 169, 106, 0.1); }
+.btn-block { width: 100%; }
+
+/* Header */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(15, 17, 21, 0.82);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+.brand { display: flex; align-items: center; gap: .6rem; font-weight: 600; }
+.brand-mark {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407;
+  font-family: "Fraunces", serif; font-weight: 600; font-size: .95rem;
+}
+.brand-name { font-family: "Fraunces", serif; font-size: 1.1rem; letter-spacing: -0.01em; }
+.brand-name em { font-style: normal; color: var(--gold); }
+.nav { display: flex; align-items: center; gap: 1.6rem; }
+.nav a { color: var(--ink-soft); font-size: .95rem; font-weight: 500; }
+.nav a:hover { color: var(--ink); }
+.nav .nav-cta { color: #1a1407; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); padding: .55rem 1.1rem; border-radius: 999px; font-weight: 600; }
+.nav .nav-cta:hover { color: #1a1407; }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 8px; }
+.nav-toggle span { width: 24px; height: 2px; background: var(--ink); border-radius: 2px; transition: .2s; }
+
+/* Hero */
+.hero {
+  position: relative; padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(3rem, 6vw, 5rem);
+  background:
+    radial-gradient(900px 500px at 78% -10%, rgba(201, 169, 106, 0.16), transparent 60%),
+    radial-gradient(700px 400px at 10% 10%, rgba(201, 169, 106, 0.07), transparent 55%);
+  overflow: hidden;
+}
+.hero-inner { max-width: 820px; }
+.hero-sub { font-size: clamp(1.05rem, 2vw, 1.2rem); color: var(--ink-soft); max-width: 640px; margin: 0 0 2rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-bottom: 1.2rem; }
+.hero-note { font-size: .9rem; color: var(--ink-dim); margin: 0; }
+
+/* Trust strip */
+.strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-alt); }
+.strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1.6rem 24px; }
+.strip-inner div { display: flex; flex-direction: column; }
+.strip-inner strong { font-family: "Fraunces", serif; font-size: 1.1rem; color: var(--gold-soft); }
+.strip-inner span { font-size: .9rem; color: var(--ink-dim); }
+
+/* Sections */
+.section { padding: clamp(3.5rem, 7vw, 6rem) 0; }
+.section-alt { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.8rem 1.6rem; transition: transform .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-4px); border-color: rgba(201, 169, 106, 0.4); }
+.card-icon {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(201, 169, 106, 0.12); color: var(--gold-soft); font-size: 1.5rem; margin-bottom: 1.1rem;
+}
+.card p { color: var(--ink-soft); font-size: .96rem; margin: 0; }
+
+/* Steps */
+.steps { list-style: none; counter-reset: step; padding: 0; margin: 2.5rem 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.steps li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem 1.6rem; position: relative; }
+.step-num {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407;
+  font-family: "Fraunces", serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;
+}
+.steps p { color: var(--ink-soft); font-size: .96rem; margin: 0; }
+
+/* Two col */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+.check-list li { position: relative; padding-left: 2rem; color: var(--ink-soft); }
+.check-list li::before {
+  content: "✓"; position: absolute; left: 0; top: 0;
+  color: var(--gold); font-weight: 700;
+  display: grid; place-items: center; width: 1.4rem; height: 1.4rem;
+}
+.check-list strong { color: var(--ink); }
+
+/* Pricing */
+.pricing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; max-width: 780px; margin: 2.5rem auto 0; }
+.price-card { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 1.8rem; display: flex; flex-direction: column; }
+.price-card.featured { border-color: var(--gold); background: linear-gradient(180deg, rgba(201,169,106,0.08), var(--surface)); }
+.badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: .3rem .9rem; border-radius: 999px; }
+.price { font-family: "Fraunces", serif; font-size: 2rem; margin: .6rem 0 0; }
+.price span { font-size: 1rem; color: var(--ink-dim); }
+.price-meta { color: var(--ink-dim); font-size: .85rem; margin: 0 0 1.2rem; }
+.price-card ul { list-style: none; padding: 0; margin: 0 0 1.6rem; display: grid; gap: .7rem; flex: 1; }
+.price-card li { padding-left: 1.6rem; position: relative; color: var(--ink-soft); font-size: .95rem; }
+.price-card li::before { content: "—"; position: absolute; left: 0; color: var(--gold); }
+.price-foot { color: var(--ink-dim); margin-top: 2rem; }
+
+/* Booking */
+.booking { background: radial-gradient(700px 500px at 85% 0%, rgba(201,169,106,0.1), transparent 60%); }
+.booking-inner { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.booking-intro p { color: var(--ink-soft); }
+.booking-points { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: .6rem; color: var(--gold-soft); font-weight: 500; }
+
+.booking-form { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.6rem, 3vw, 2.2rem); box-shadow: var(--shadow); }
+.field { display: flex; flex-direction: column; margin-bottom: 1.1rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+label { font-size: .9rem; font-weight: 500; margin-bottom: .4rem; color: var(--ink-soft); }
+input, select, textarea {
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: .8rem .9rem; color: var(--ink); font-family: inherit; font-size: .98rem; width: 100%;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,106,0.18); }
+input::placeholder, textarea::placeholder { color: var(--ink-dim); }
+textarea { resize: vertical; }
+.consent { display: flex; align-items: flex-start; gap: .6rem; font-size: .88rem; color: var(--ink-soft); margin: .4rem 0; cursor: pointer; }
+.consent input { width: auto; margin-top: .25rem; }
+.error { color: #f0907a; font-size: .8rem; min-height: 1rem; margin-top: .25rem; }
+.error:empty { min-height: 0; }
+.form-hint { font-size: .82rem; color: var(--ink-dim); margin: 1rem 0 0; text-align: center; }
+input.invalid, select.invalid { border-color: #f0907a; }
+
+/* Success */
+.booking-success { background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius); padding: clamp(1.8rem, 4vw, 2.6rem); text-align: center; box-shadow: var(--shadow); }
+.success-icon { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1.2rem; background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #1a1407; font-size: 1.8rem; font-weight: 700; }
+.booking-success p { color: var(--ink-soft); }
+.success-summary { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem 1.2rem; margin: 1.4rem 0; text-align: left; font-size: .92rem; }
+.success-summary div { display: flex; justify-content: space-between; gap: 1rem; padding: .3rem 0; }
+.success-summary div span:first-child { color: var(--ink-dim); }
+.booking-success .btn { margin: .3rem; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--line); background: var(--bg-alt); padding-top: 3rem; }
+.footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; padding-bottom: 2.5rem; }
+.footer-brand { display: flex; flex-direction: column; gap: .6rem; align-items: flex-start; }
+.footer-brand p { color: var(--ink-dim); font-size: .92rem; max-width: 320px; margin: .4rem 0 0; }
+.footer-col h4 { font-family: "Inter", sans-serif; font-size: .85rem; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-dim); margin: 0 0 .9rem; }
+.footer-col a { display: block; color: var(--ink-soft); font-size: .95rem; padding: .25rem 0; }
+.footer-col a:hover { color: var(--gold-soft); }
+.footer-bottom { display: flex; justify-content: space-between; padding: 1.4rem 24px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--ink-dim); }
+
+/* Responsive */
+@media (max-width: 880px) {
+  .nav { position: fixed; inset: 70px 0 auto 0; flex-direction: column; gap: 0; background: var(--bg-alt); border-bottom: 1px solid var(--line); padding: .5rem 24px 1.2rem; transform: translateY(-120%); opacity: 0; pointer-events: none; transition: .25s ease; }
+  .nav.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .nav a { padding: .8rem 0; width: 100%; border-bottom: 1px solid var(--line); }
+  .nav .nav-cta { text-align: center; margin-top: .8rem; border-bottom: 0; }
+  .nav-toggle { display: flex; }
+  .two-col, .booking-inner { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .strip-inner { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .field-row { grid-template-columns: 1fr; }
+  .pricing { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: .5rem; }
+}
+
+</style>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">LV</span>
+        <span class="brand-name">LuxVision <em>Digital</em></span>
+      </a>
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#vorgehen">Vorgehen</a>
+        <a href="#preise">Preise</a>
+        <a href="#termin" class="nav-cta">Termin buchen</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <p class="eyebrow">KI-gestützte Bildproduktion</p>
+        <h1>Professionelle Produktbilder &amp; Werbemittel –<br>ohne aufwändiges Foto-Shooting.</h1>
+        <p class="hero-sub">
+          Wir sind ein kleines Studio für KI-gestützte Produkt- und Markenbilder.
+          Wir helfen Online-Shops und jungen Marken, hochwertige Shop-Fotos und Anzeigen-Motive
+          zu bekommen – schneller und planbarer als ein klassisches Shooting, zu einem fairen Preis.
+        </p>
+        <div class="hero-actions">
+          <a href="#termin" class="btn btn-primary">Unverbindliche Erstberatung buchen</a>
+          <a href="#leistungen" class="btn btn-ghost">Was wir machen</a>
+        </div>
+        <p class="hero-note">Kostenlos &amp; unverbindlich · ca. 30 Minuten · per Video-Call oder Telefon</p>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <section class="strip">
+      <div class="container strip-inner">
+        <div><strong>In Tagen</strong><span>statt Wochen Vorlauf</span></div>
+        <div><strong>Faire Preise</strong><span>transparent &amp; planbar</span></div>
+        <div><strong>Viele Varianten</strong><span>ideal für A/B-Tests</span></div>
+        <div><strong>Persönlich</strong><span>direkter Ansprechpartner</span></div>
+      </div>
+    </section>
+
+    <!-- LEISTUNGEN -->
+    <section id="leistungen" class="section">
+      <div class="container">
+        <p class="eyebrow center">Leistungen</p>
+        <h2 class="center">Was wir für dich produzieren</h2>
+        <p class="section-lead center">
+          Vom sauberen Produktbild bis zur fertigen Anzeige – wir liefern Bildmaterial,
+          das du direkt in Shop und Kampagnen einsetzen kannst.
+        </p>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">◧</div>
+            <h3>Produktbilder für den Shop</h3>
+            <p>
+              Saubere Aufnahmen mit guter Ausleuchtung und realistischer Material­darstellung –
+              passend für Shop-Systeme, Marktplätze und Kataloge.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">◰</div>
+            <h3>Lifestyle- &amp; Szenenbilder</h3>
+            <p>
+              Produkte in passenden Umgebungen oder an digitalen Models, die zu deiner
+              Zielgruppe passen. Mehr Kontext, mehr Emotion – ohne Reise und Set.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">◳</div>
+            <h3>Werbemittel &amp; Ad Creatives</h3>
+            <p>
+              Anzeigen-Motive für Meta, TikTok und LinkedIn, abgestimmt auf Format und Plattform –
+              und in mehreren Varianten zum Testen.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">◱</div>
+            <h3>Laufende Content-Begleitung</h3>
+            <p>
+              Für Marken, die regelmäßig neue Motive brauchen: planbarer Bild-Nachschub
+              für Drops, Aktionen und Social Media.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- VORGEHEN -->
+    <section id="vorgehen" class="section section-alt">
+      <div class="container">
+        <p class="eyebrow center">So läuft's ab</p>
+        <h2 class="center">In drei Schritten zu fertigen Bildern</h2>
+
+        <ol class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <h3>Erstgespräch</h3>
+            <p>Wir schauen uns deine Produkte und Ziele an und klären, was sinnvoll ist – ehrlich und unverbindlich.</p>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <h3>Produktion</h3>
+            <p>Wir erstellen erste Motive, du gibst Feedback. Anpassungen sind eingeplant, bis es passt.</p>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <h3>Übergabe</h3>
+            <p>Du bekommst die fertigen Dateien in den passenden Formaten – bereit für Shop und Kampagne.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- WARUM -->
+    <section class="section">
+      <div class="container two-col">
+        <div>
+          <p class="eyebrow">Warum KI-Bilder?</p>
+          <h2>Ehrlich gesagt: weil es Zeit und Geld spart.</h2>
+          <p class="section-lead">
+            Ein klassisches Shooting mit Set, Model und Location ist teuer und braucht Wochen Vorlauf.
+            Für viele Shops steht das in keinem Verhältnis zum Bedarf an frischem Bildmaterial.
+            Wir liefern eine pragmatische Alternative – nicht für jede Aufgabe, aber für überraschend viele.
+          </p>
+        </div>
+        <ul class="check-list">
+          <li><strong>Schneller verfügbar.</strong> Erste Ergebnisse oft in wenigen Tagen statt nach langer Planung.</li>
+          <li><strong>Planbare Kosten.</strong> Keine Reise-, Set- oder Model-Budgets, die aus dem Ruder laufen.</li>
+          <li><strong>Flexibel im Test.</strong> Viele Varianten eines Motivs für A/B-Tests, ohne neues Shooting.</li>
+          <li><strong>Ehrliche Einschätzung.</strong> Wenn ein echtes Foto besser passt, sagen wir das auch.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PREISE -->
+    <section id="preise" class="section section-alt">
+      <div class="container">
+        <p class="eyebrow center">Preise</p>
+        <h2 class="center">Transparente Pakete</h2>
+        <p class="section-lead center">Klare Startpreise, keine versteckten Kosten. Den genauen Umfang klären wir im Erstgespräch.</p>
+
+        <div class="pricing">
+          <article class="price-card">
+            <h3>Visual-Identity-Paket</h3>
+            <p class="price"><span>ab</span> 1.000&nbsp;€</p>
+            <p class="price-meta">einmalig</p>
+            <ul>
+              <li>Logo-Aufbereitung</li>
+              <li>5 hochwertige Werbe-Assets</li>
+              <li>Lieferung in passenden Formaten</li>
+              <li>Eine Feedback-Runde inklusive</li>
+            </ul>
+            <a href="#termin" class="btn btn-outline">Dazu beraten lassen</a>
+          </article>
+
+          <article class="price-card featured">
+            <span class="badge">Beliebt</span>
+            <h3>Retainer / Content-Begleitung</h3>
+            <p class="price">nach Absprache</p>
+            <p class="price-meta">monatlich</p>
+            <ul>
+              <li>Regelmäßig neue Motive</li>
+              <li>Feste Ansprechperson</li>
+              <li>Abgestimmt auf deine Kampagnen</li>
+              <li>Kündbar, ohne lange Bindung</li>
+            </ul>
+            <a href="#termin" class="btn btn-primary">Angebot anfragen</a>
+          </article>
+        </div>
+        <p class="price-foot center">Du bist unsicher, was passt? Genau dafür ist die kostenlose Erstberatung da.</p>
+      </div>
+    </section>
+
+    <!-- TERMIN / BOOKING -->
+    <section id="termin" class="section booking">
+      <div class="container booking-inner">
+        <div class="booking-intro">
+          <p class="eyebrow">Erstberatung</p>
+          <h2>Unverbindlichen Termin buchen</h2>
+          <p>
+            In etwa 30 Minuten schauen wir uns gemeinsam an, was für deine Produkte sinnvoll ist.
+            Kostenlos, ohne Verpflichtung – am Ende weißt du, ob und wie wir helfen können.
+          </p>
+          <ul class="booking-points">
+            <li>✓ Kostenlos &amp; unverbindlich</li>
+            <li>✓ Per Video-Call oder Telefon</li>
+            <li>✓ Ehrliche Einschätzung statt Verkaufsgespräch</li>
+          </ul>
+        </div>
+
+        <form class="booking-form" id="bookingForm" novalidate>
+          <div class="field">
+            <label for="name">Name *</label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+            <small class="error" data-for="name"></small>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="email">E-Mail *</label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+              <small class="error" data-for="email"></small>
+            </div>
+            <div class="field">
+              <label for="company">Unternehmen / Marke</label>
+              <input type="text" id="company" name="company" autocomplete="organization" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="date">Wunschtermin *</label>
+              <input type="date" id="date" name="date" required />
+              <small class="error" data-for="date"></small>
+            </div>
+            <div class="field">
+              <label for="time">Uhrzeit *</label>
+              <select id="time" name="time" required>
+                <option value="">Bitte wählen</option>
+                <option>09:00</option>
+                <option>10:00</option>
+                <option>11:00</option>
+                <option>13:00</option>
+                <option>14:00</option>
+                <option>15:00</option>
+                <option>16:00</option>
+                <option>17:00</option>
+              </select>
+              <small class="error" data-for="time"></small>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="channel">Wie sollen wir uns melden?</label>
+            <select id="channel" name="channel">
+              <option>Video-Call</option>
+              <option>Telefon</option>
+              <option>Egal</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="message">Worum geht's? (optional)</label>
+            <textarea id="message" name="message" rows="3" placeholder="Kurz zu deinen Produkten und was du brauchst …"></textarea>
+          </div>
+
+          <label class="consent">
+            <input type="checkbox" id="consent" name="consent" required />
+            <span>Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden. *</span>
+          </label>
+          <small class="error" data-for="consent"></small>
+
+          <button type="submit" class="btn btn-primary btn-block">Termin anfragen</button>
+          <p class="form-hint">* Pflichtfeld · Die Anfrage ist unverbindlich. Wir bestätigen den Termin per E-Mail.</p>
+        </form>
+
+        <!-- Success state -->
+        <div class="booking-success" id="bookingSuccess" hidden>
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h3>Danke, <span id="successName">!</span></h3>
+          <p>Deine Terminanfrage ist eingegangen. Wir melden uns kurzfristig per E-Mail zur Bestätigung.</p>
+          <div class="success-summary" id="successSummary"></div>
+          <a class="btn btn-outline" id="calendarLink" href="#">Zum Kalender hinzufügen</a>
+          <button type="button" class="btn btn-ghost" id="resetBooking">Neue Anfrage</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark">LV</span>
+        <span class="brand-name">LuxVision <em>Digital</em></span>
+        <p>KI-gestützte Produkt- &amp; Markenbilder für Online-Shops und junge Marken.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Seiten</h4>
+        <a href="#leistungen">Leistungen</a>
+        <a href="#vorgehen">Vorgehen</a>
+        <a href="#preise">Preise</a>
+        <a href="#termin">Termin buchen</a>
+      </div>
+      <div class="footer-col">
+        <h4>Kontakt</h4>
+        <a href="mailto:hallo@luxvision.digital">hallo@luxvision.digital</a>
+        <a href="#termin">Erstberatung buchen</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> LuxVision Digital</span>
+      <span>Impressum · Datenschutz</span>
+    </div>
+  </footer>
+
+  <script>
+// Jahr im Footer
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// Mobile-Navigation
+const toggle = document.querySelector(".nav-toggle");
+const nav = document.querySelector(".nav");
+toggle.addEventListener("click", () => {
+  const open = nav.classList.toggle("open");
+  toggle.setAttribute("aria-expanded", String(open));
+});
+nav.querySelectorAll("a").forEach((a) =>
+  a.addEventListener("click", () => {
+    nav.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  })
+);
+
+// Wunschtermin: frühestens morgen vorbelegen
+const dateInput = document.getElementById("date");
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+dateInput.min = tomorrow.toISOString().split("T")[0];
+
+const form = document.getElementById("bookingForm");
+const success = document.getElementById("bookingSuccess");
+
+function setError(name, msg) {
+  const el = form.querySelector(`.error[data-for="${name}"]`);
+  const input = form.querySelector(`[name="${name}"]`);
+  if (el) el.textContent = msg || "";
+  if (input) input.classList.toggle("invalid", Boolean(msg));
+}
+
+function validate() {
+  let ok = true;
+  const get = (n) => form.querySelector(`[name="${n}"]`).value.trim();
+
+  if (!get("name")) { setError("name", "Bitte gib deinen Namen an."); ok = false; }
+  else setError("name", "");
+
+  const email = get("email");
+  if (!email) { setError("email", "Bitte gib deine E-Mail an."); ok = false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("email", "Bitte gib eine gültige E-Mail an."); ok = false; }
+  else setError("email", "");
+
+  if (!get("date")) { setError("date", "Bitte wähle ein Datum."); ok = false; }
+  else setError("date", "");
+
+  if (!get("time")) { setError("time", "Bitte wähle eine Uhrzeit."); ok = false; }
+  else setError("time", "");
+
+  if (!form.querySelector('[name="consent"]').checked) { setError("consent", "Bitte stimme der Speicherung zu."); ok = false; }
+  else setError("consent", "");
+
+  return ok;
+}
+
+function formatDate(iso) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("de-DE", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
+}
+
+function buildIcs(data) {
+  const start = new Date(`${data.date}T${data.time}:00`);
+  const end = new Date(start.getTime() + 30 * 60000);
+  const fmt = (d) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const lines = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//LuxVision Digital//Erstberatung//DE",
+    "BEGIN:VEVENT",
+    `UID:${Date.now()}@luxvision.digital`,
+    `DTSTAMP:${fmt(new Date())}`,
+    `DTSTART:${fmt(start)}`,
+    `DTEND:${fmt(end)}`,
+    "SUMMARY:Erstberatung – LuxVision Digital",
+    `DESCRIPTION:Unverbindliche Erstberatung (${data.channel}).`,
+    "END:VEVENT", "END:VCALENDAR",
+  ];
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(lines.join("\r\n"));
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  // Hinweis: Ohne Backend wird die Anfrage nur lokal bestätigt.
+  // Für den Live-Betrieb hier z. B. einen Fetch-Aufruf an ein Buchungs-/E-Mail-Backend ergänzen.
+  console.log("Terminanfrage:", data);
+
+  document.getElementById("successName").textContent = data.name + "!";
+  document.getElementById("successSummary").innerHTML = `
+    <div><span>Termin</span><span>${formatDate(data.date)}, ${data.time} Uhr</span></div>
+    <div><span>Kanal</span><span>${data.channel}</span></div>
+    <div><span>E-Mail</span><span>${data.email}</span></div>`;
+  document.getElementById("calendarLink").href = buildIcs(data);
+  document.getElementById("calendarLink").setAttribute("download", "erstberatung.ics");
+
+  form.hidden = true;
+  success.hidden = false;
+  success.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+document.getElementById("resetBooking").addEventListener("click", () => {
+  form.reset();
+  form.hidden = false;
+  success.hidden = true;
+  form.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+</script>
+</body>
+</html>
