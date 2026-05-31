@@ -127,3 +127,76 @@ document.getElementById("resetBooking").addEventListener("click", () => {
   success.hidden = true;
   form.scrollIntoView({ behavior: "smooth", block: "center" });
 });
+
+/* ===================================================================
+   Cinematic scroll narrative: pinned [data-story] sections.
+   Computes section progress p (0..1) and animates child layers
+   (Vision-Reel scenes, Process journey numbers/steps).
+   =================================================================== */
+(function () {
+  if (reduceMotion) return; // respektiert Nutzer-Einstellung
+
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  // Glockenkurve: voll sichtbar in der Mitte einer Stage, weich an den Rändern
+  const bell = (p, center, half) => {
+    const d = Math.abs(p - center) / half;
+    return Math.max(0, 1 - d * d);
+  };
+
+  const stories = Array.from(document.querySelectorAll("[data-story]"));
+  if (!stories.length) return;
+
+  function updateVisionReel(frame, p) {
+    const scenes = frame.querySelectorAll(".scene");
+    const centers = [1 / 6, 3 / 6, 5 / 6]; // Mitte jeder von 3 Stages
+    scenes.forEach((scene, i) => {
+      const v = bell(p, centers[i], 0.28);
+      const scale = 0.92 + v * 0.12; // zoom in beim Eintreten, zoom out beim Verlassen
+      scene.style.opacity = v.toFixed(3);
+      scene.style.transform = `scale(${scale.toFixed(3)})`;
+    });
+  }
+
+  function updateProcess(frame, p) {
+    const nums = frame.querySelectorAll(".big-num span");
+    const steps = frame.querySelectorAll(".step");
+    const count = nums.length;
+    const centers = Array.from({ length: count }, (_, i) => (i + 0.5) / count);
+    for (let i = 0; i < count; i++) {
+      const v = bell(p, centers[i], 0.18);
+      const scale = 0.7 + v * 0.5; // 0.7 → 1.2 → 0.7
+      nums[i].style.opacity = v.toFixed(3);
+      nums[i].style.transform = `scale(${scale.toFixed(3)})`;
+      if (steps[i]) {
+        steps[i].style.opacity = v.toFixed(3);
+        steps[i].style.transform = `translateY(${((1 - v) * 24).toFixed(1)}px)`;
+      }
+    }
+  }
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const vh = window.innerHeight;
+    for (const section of stories) {
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - vh;
+      if (total <= 0) continue;
+      const p = clamp(-rect.top / total, 0, 1);
+      const frame = section.querySelector(".story-frame");
+      if (!frame) continue;
+      frame.style.setProperty("--p", p.toFixed(4));
+      if (section.classList.contains("story-vision")) updateVisionReel(frame, p);
+      else if (section.classList.contains("story-process")) updateProcess(frame, p);
+    }
+  }
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  update();
+})();

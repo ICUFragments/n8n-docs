@@ -7,7 +7,7 @@
   <meta name="description" content="Kleines Studio für KI-gestützte Produkt- und Markenbilder. Professionelle Shop-Fotos und Werbemittel ohne aufwändige Shootings. Jetzt unverbindliche Erstberatung buchen." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
 :root {
   --bg: #0e1014;
@@ -38,8 +38,9 @@ body {
   color: var(--ink);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
+html { overflow-x: clip; }
 
 .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 
@@ -278,6 +279,111 @@ input.invalid, select.invalid { border-color: #f0907a; }
   .footer-bottom { flex-direction: column; gap: .5rem; }
 }
 
+/* ===================================================================
+   Cinematic scroll experience: scroll cue, pinned stories, process, faq, about
+   =================================================================== */
+
+/* Scroll cue at the bottom of hero */
+.scroll-cue { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 5; width: 26px; height: 42px; border: 1.5px solid var(--gold); border-radius: 14px; display: grid; place-items: start center; padding-top: 6px; opacity: .85; }
+.scroll-cue span { width: 3px; height: 8px; border-radius: 2px; background: var(--gold); animation: cue 1.6s ease-in-out infinite; }
+@keyframes cue { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(14px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
+
+/* Pinned story scaffold (used by Vision-Reel and Process journey) */
+.story { position: relative; }
+.story-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.story-frame { position: relative; width: 100%; height: 100%; }
+
+/* Vision-Reel: section is 360vh tall (3 stages × ~1.2 screens) */
+.story-vision { height: 360vh; background: #0a0c12; }
+.story-vision .story-bg { position: absolute; inset: -10%; z-index: 0; filter: blur(80px); opacity: .5; pointer-events: none;
+  background:
+    radial-gradient(40% 50% at calc(20% + var(--p, 0) * 60%) 30%, rgba(201,169,106,.55), transparent 60%),
+    radial-gradient(40% 50% at calc(80% - var(--p, 0) * 50%) 70%, rgba(139,124,240,.45), transparent 60%);
+  transition: background-position .4s ease; }
+
+.scene { position: absolute; inset: 0; display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(1rem, 4vw, 3rem); align-items: center; padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 6vw, 5rem); opacity: 0; transform: scale(.9); will-change: transform, opacity; z-index: 1; }
+.scene-text { max-width: 460px; color: var(--ink); }
+.scene-text .kicker { font-family: "Inter", sans-serif; text-transform: uppercase; letter-spacing: .22em; font-size: .72rem; color: var(--gold); margin: 0 0 .8rem; }
+.scene-text h2 { font-size: clamp(2rem, 5vw, 3.6rem); margin: 0 0 .8rem; font-weight: 600; }
+.scene-text p { color: var(--ink-soft); font-size: clamp(1rem, 1.6vw, 1.15rem); margin: 0; max-width: 420px; }
+.scene-art { width: 100%; height: clamp(260px, 60vh, 560px); border-radius: 22px; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 50px 100px -40px rgba(0,0,0,.8); background-size: 180% 180%; animation: hueDrift 14s ease-in-out infinite alternate; }
+.scene-art-1 { background-image: radial-gradient(120% 100% at 20% 10%, #ecdca8 0%, #b07c3a 40%, #2a1f12 100%); }
+.scene-art-2 { background-image: radial-gradient(120% 100% at 80% 20%, #c5beff 0%, #6a5acd 45%, #1d1830 100%); }
+.scene-art-3 { background-image: radial-gradient(120% 100% at 30% 80%, #8be6db 0%, #2f8f86 45%, #10231f 100%); }
+
+/* Progress bar at bottom of story */
+.story-progress { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 4; display: grid; gap: 6px; width: min(80%, 360px); }
+.story-progress .bar { height: 2px; background: rgba(255,255,255,.12); border-radius: 2px; overflow: hidden; display: block; }
+.story-progress .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-soft), var(--gold)); transition: width .15s linear; }
+.story-progress .ticks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.story-progress .ticks b { height: 4px; }
+
+/* Process journey: 4 stages, section height 360vh */
+.story-process { height: 360vh; background: var(--bg); }
+.story-process .process-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(60% 70% at 50% 30%, rgba(201,169,106,.10), transparent 60%); }
+.process-head { position: absolute; top: clamp(2rem, 6vw, 4rem); left: 50%; transform: translateX(-50%); z-index: 3; text-align: center; max-width: 90%; }
+.process-head .kicker { font-family: "Inter", sans-serif; text-transform: uppercase; letter-spacing: .22em; font-size: .72rem; color: var(--gold); margin: 0 0 .5rem; }
+.process-head h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin: 0; }
+
+.process-stage { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; pointer-events: none; }
+.big-num { position: relative; width: clamp(220px, 36vw, 380px); height: clamp(220px, 36vw, 380px); display: grid; place-items: center; }
+.big-num span { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Fraunces", serif; font-weight: 700; font-size: clamp(8rem, 22vw, 16rem); line-height: 1; letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  opacity: 0; transform: scale(.7); will-change: transform, opacity; }
+
+.process-steps { position: absolute; left: 50%; bottom: clamp(5rem, 14vh, 9rem); transform: translateX(-50%); width: min(680px, 90%); z-index: 3; }
+.step { position: absolute; inset: 0; text-align: center; padding: 0 1rem; opacity: 0; transform: translateY(20px); will-change: opacity, transform; }
+.step h3 { font-size: clamp(1.3rem, 2.4vw, 1.8rem); margin: 0 0 .4rem; font-weight: 600; }
+.step p { color: var(--ink-soft); font-size: clamp(.95rem, 1.4vw, 1.05rem); margin: 0 auto; max-width: 520px; }
+
+.process-rail { position: absolute; left: 50%; bottom: clamp(2rem, 6vh, 3.5rem); transform: translateX(-50%); width: min(560px, 80%); height: 2px; background: rgba(255,255,255,.10); border-radius: 2px; z-index: 4; }
+.process-rail i { position: absolute; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.18); }
+.process-rail i:nth-child(1) { left: 0%; }
+.process-rail i:nth-child(2) { left: calc(33.33% - 4px); }
+.process-rail i:nth-child(3) { left: calc(66.66% - 4px); }
+.process-rail i:nth-child(4) { left: calc(100% - 8px); }
+.process-rail .dot { position: absolute; top: -6px; width: 14px; height: 14px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  box-shadow: 0 0 0 6px rgba(201,169,106,.15); transition: left .15s linear; transform: translateX(-50%); }
+
+/* FAQ */
+.faq-container { max-width: 760px; }
+.faq { margin-top: 2.4rem; display: grid; gap: .8rem; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 1.3rem; transition: border-color .2s ease, background .2s ease; }
+.faq details[open] { border-color: rgba(201,169,106,.4); background: linear-gradient(180deg, rgba(201,169,106,.05), var(--surface)); }
+.faq summary { list-style: none; cursor: pointer; padding: 1.1rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: 500; color: var(--ink); font-size: 1rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: "Fraunces", serif; font-size: 1.6rem; color: var(--gold); line-height: 1; transition: transform .25s ease; }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details > div { padding: 0 0 1.2rem; color: var(--ink-soft); font-size: .96rem; max-width: 60ch; }
+
+/* Über das Studio */
+.about .about-visual { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+.about-art { position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 70% at 30% 30%, rgba(201,169,106,.55), transparent 60%),
+    radial-gradient(50% 60% at 80% 70%, rgba(139,124,240,.45), transparent 60%),
+    linear-gradient(180deg, #1c2030, #0e1118);
+  animation: hueDrift 16s ease-in-out infinite alternate; background-size: 180% 180%; }
+.about-chip { position: absolute; left: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: .5rem; font-size: .78rem; font-weight: 600; color: var(--ink); padding: .4rem .8rem; border-radius: 999px; background: rgba(20,23,30,.78); border: 1px solid var(--line); backdrop-filter: blur(8px); }
+.about-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+
+/* Responsive overrides for cinematic sections */
+@media (max-width: 880px) {
+  .story-vision, .story-process { height: 320vh; }
+  .scene { grid-template-columns: 1fr; padding: 1.4rem; align-content: center; }
+  .scene-art { height: 38vh; order: -1; }
+  .scene-text { max-width: 100%; padding: 0 .2rem; }
+  .scene-text h2 { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .process-head { top: 1.4rem; }
+  .big-num span { font-size: clamp(7rem, 32vw, 12rem); }
+  .process-steps { bottom: clamp(6rem, 18vh, 9rem); }
+}
+@media (max-width: 520px) {
+  .scroll-cue { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -288,10 +394,12 @@ input.invalid, select.invalid { border-color: #f0907a; }
         <span class="brand-name">LuxVision <em>Digital</em></span>
       </a>
       <nav class="nav" aria-label="Hauptnavigation">
+        <a href="#vision">Vision</a>
         <a href="#leistungen">Leistungen</a>
         <a href="#galerie">Galerie</a>
-        <a href="#vorgehen">Vorgehen</a>
+        <a href="#prozess">Prozess</a>
         <a href="#preise">Preise</a>
+        <a href="#faq">FAQ</a>
         <a href="#termin" class="nav-cta">Termin buchen</a>
       </nav>
       <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
@@ -316,7 +424,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
           </p>
           <div class="hero-actions reveal">
             <a href="#termin" class="btn btn-primary">Unverbindliche Erstberatung buchen</a>
-            <a href="#galerie" class="btn btn-ghost">Bildsprache ansehen</a>
+            <a href="#vision" class="btn btn-ghost">Bildwelten ansehen</a>
           </div>
           <p class="hero-note reveal">Kostenlos &amp; unverbindlich · ca. 30 Minuten · per Video-Call oder Telefon</p>
         </div>
@@ -327,6 +435,49 @@ input.invalid, select.invalid { border-color: #f0907a; }
           <figure class="render-card rc-2"><div class="render-art art-2"></div><span class="tag">Lifestyle</span></figure>
           <figure class="render-card rc-3"><div class="render-art art-3"></div><span class="tag">Editorial</span></figure>
           <div class="render-chip"><span class="dot"></span>KI-Render · live</div>
+        </div>
+
+        <a href="#vision" class="scroll-cue" aria-label="Weiter scrollen"><span></span></a>
+      </div>
+    </section>
+
+    <!-- VISION-REEL: pinned cinematic scenes -->
+    <section id="vision" class="story story-vision" data-story data-stages="3">
+      <div class="story-stage">
+        <div class="story-frame">
+          <div class="story-bg" aria-hidden="true"></div>
+
+          <div class="scene scene-1" aria-hidden="true">
+            <div class="scene-art scene-art-1"></div>
+            <div class="scene-text">
+              <p class="kicker">Szene 01 / Produktstudio</p>
+              <h2>Sterile Klarheit.</h2>
+              <p>Saubere Aufnahmen mit perfekter Ausleuchtung — bereit für Shop und Marktplatz.</p>
+            </div>
+          </div>
+
+          <div class="scene scene-2" aria-hidden="true">
+            <div class="scene-art scene-art-2"></div>
+            <div class="scene-text">
+              <p class="kicker">Szene 02 / Lifestyle</p>
+              <h2>Atmosphäre &amp; Kontext.</h2>
+              <p>Produkte in Welten, die deine Zielgruppe sofort einordnet — ohne Reise und Set.</p>
+            </div>
+          </div>
+
+          <div class="scene scene-3" aria-hidden="true">
+            <div class="scene-art scene-art-3"></div>
+            <div class="scene-text">
+              <p class="kicker">Szene 03 / Editorial</p>
+              <h2>Markengeschichte.</h2>
+              <p>Bilder mit Haltung — für Kampagnen, Drops und Editorial-Auftritte.</p>
+            </div>
+          </div>
+
+          <div class="story-progress" aria-hidden="true">
+            <span class="bar"><i style="width: calc(var(--p, 0) * 100%)"></i></span>
+            <span class="ticks"><b></b><b></b><b></b></span>
+          </div>
         </div>
       </div>
     </section>
@@ -355,37 +506,22 @@ input.invalid, select.invalid { border-color: #f0907a; }
           <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◧</div>
             <h3>Produktbilder für den Shop</h3>
-            <p>
-              Saubere Aufnahmen mit guter Ausleuchtung und realistischer Material­darstellung –
-              passend für Shop-Systeme, Marktplätze und Kataloge.
-            </p>
+            <p>Saubere Aufnahmen mit guter Ausleuchtung und realistischer Material­darstellung – passend für Shop-Systeme, Marktplätze und Kataloge.</p>
           </article>
-
           <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◰</div>
             <h3>Lifestyle- &amp; Szenenbilder</h3>
-            <p>
-              Produkte in passenden Umgebungen oder an digitalen Models, die zu deiner
-              Zielgruppe passen. Mehr Kontext, mehr Emotion – ohne Reise und Set.
-            </p>
+            <p>Produkte in passenden Umgebungen oder an digitalen Models, die zu deiner Zielgruppe passen. Mehr Kontext, mehr Emotion – ohne Reise und Set.</p>
           </article>
-
           <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◳</div>
             <h3>Werbemittel &amp; Ad Creatives</h3>
-            <p>
-              Anzeigen-Motive für Meta, TikTok und LinkedIn, abgestimmt auf Format und Plattform –
-              und in mehreren Varianten zum Testen.
-            </p>
+            <p>Anzeigen-Motive für Meta, TikTok und LinkedIn, abgestimmt auf Format und Plattform – und in mehreren Varianten zum Testen.</p>
           </article>
-
           <article class="card reveal">
             <div class="card-icon" aria-hidden="true">◱</div>
             <h3>Laufende Content-Begleitung</h3>
-            <p>
-              Für Marken, die regelmäßig neue Motive brauchen: planbarer Bild-Nachschub
-              für Drops, Aktionen und Social Media.
-            </p>
+            <p>Für Marken, die regelmäßig neue Motive brauchen: planbarer Bild-Nachschub für Drops, Aktionen und Social Media.</p>
           </article>
         </div>
       </div>
@@ -412,34 +548,37 @@ input.invalid, select.invalid { border-color: #f0907a; }
       </div>
     </section>
 
-    <!-- VORGEHEN -->
-    <section id="vorgehen" class="section">
-      <div class="container">
-        <p class="eyebrow center reveal">So läuft's ab</p>
-        <h2 class="center reveal">In drei Schritten zu fertigen Bildern</h2>
+    <!-- PROZESS: cinematic pinned journey -->
+    <section id="prozess" class="story story-process" data-story data-stages="4">
+      <div class="story-stage">
+        <div class="story-frame">
+          <div class="process-bg" aria-hidden="true"></div>
+          <header class="process-head">
+            <p class="kicker">So entsteht dein Motiv</p>
+            <h2>Vom Brief zum fertigen Bild.</h2>
+          </header>
 
-        <ol class="steps">
-          <li class="reveal">
-            <span class="step-num">1</span>
-            <h3>Erstgespräch</h3>
-            <p>Wir schauen uns deine Produkte und Ziele an und klären, was sinnvoll ist – ehrlich und unverbindlich.</p>
-          </li>
-          <li class="reveal">
-            <span class="step-num">2</span>
-            <h3>Produktion</h3>
-            <p>Wir erstellen erste Motive, du gibst Feedback. Anpassungen sind eingeplant, bis es passt.</p>
-          </li>
-          <li class="reveal">
-            <span class="step-num">3</span>
-            <h3>Übergabe</h3>
-            <p>Du bekommst die fertigen Dateien in den passenden Formaten – bereit für Shop und Kampagne.</p>
-          </li>
-        </ol>
+          <div class="process-stage" aria-hidden="true">
+            <div class="big-num"><span class="n1">01</span><span class="n2">02</span><span class="n3">03</span><span class="n4">04</span></div>
+          </div>
+
+          <div class="process-steps">
+            <article class="step st1"><h3>Brief</h3><p>Wir verstehen Produkt, Zielgruppe und Tonalität – kurz und konkret.</p></article>
+            <article class="step st2"><h3>Konzept</h3><p>Bildidee, Stil, Komposition. Wir zeigen dir, wohin die Reise geht.</p></article>
+            <article class="step st3"><h3>Render</h3><p>Wir erstellen Varianten und schleifen Details, bis es passt.</p></article>
+            <article class="step st4"><h3>Lieferung</h3><p>Finale Dateien in allen benötigten Formaten – ready für Shop &amp; Kampagne.</p></article>
+          </div>
+
+          <div class="process-rail" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+            <span class="dot" style="left: calc(var(--p, 0) * 100%)"></span>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- WARUM -->
-    <section class="section section-alt">
+    <section class="section">
       <div class="container two-col">
         <div>
           <p class="eyebrow reveal">Warum KI-Bilder?</p>
@@ -460,7 +599,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
     </section>
 
     <!-- PREISE -->
-    <section id="preise" class="section">
+    <section id="preise" class="section section-alt">
       <div class="container">
         <p class="eyebrow center reveal">Preise</p>
         <h2 class="center reveal">Transparente Pakete</h2>
@@ -495,6 +634,65 @@ input.invalid, select.invalid { border-color: #f0907a; }
           </article>
         </div>
         <p class="price-foot center reveal">Du bist unsicher, was passt? Genau dafür ist die kostenlose Erstberatung da.</p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <div class="container faq-container">
+        <p class="eyebrow center reveal">FAQ</p>
+        <h2 class="center reveal">Häufige Fragen</h2>
+
+        <div class="faq">
+          <details class="reveal">
+            <summary>Wie unterscheidet sich euer Ergebnis von „typischen" KI-Bildern?</summary>
+            <div>Wir arbeiten in mehreren Schritten: gezielte Bildkomposition, Material- und Lichtkorrekturen, manuelle Nacharbeit. Das Ziel sind Bilder, die ein normaler Betrachter nicht als KI erkennt – nicht generische Spielereien.</div>
+          </details>
+          <details class="reveal">
+            <summary>Brauche ich dafür ein bestehendes Foto meines Produkts?</summary>
+            <div>Meistens hilft das – aber nicht zwingend. Wir können auf Basis von Produktfotos, technischen Zeichnungen oder Beschreibungen arbeiten. Im Erstgespräch klären wir, was sinnvoll ist.</div>
+          </details>
+          <details class="reveal">
+            <summary>Wie lange dauert die Produktion?</summary>
+            <div>Erste Vorschläge in 2–5 Werktagen, finale Lieferung je nach Umfang innerhalb von 1–2 Wochen. Drops oder Kampagnen mit fixem Termin koordinieren wir vorab.</div>
+          </details>
+          <details class="reveal">
+            <summary>Wem gehören die Bilder am Ende?</summary>
+            <div>Dir. Du erhältst die vollen Nutzungsrechte für Shop, Werbung und Social Media. Wir behalten lediglich das Recht, ausgewählte Motive zu Referenzzwecken zu zeigen – nur nach Rücksprache.</div>
+          </details>
+          <details class="reveal">
+            <summary>Was, wenn ein echtes Foto besser wäre?</summary>
+            <div>Dann sagen wir das. Bestimmte Texturen, Personen oder Detailaufnahmen funktionieren mit echter Fotografie besser. Wir helfen, die richtige Mischung zu finden.</div>
+          </details>
+          <details class="reveal">
+            <summary>Kennzeichnet ihr KI-generierte Bilder?</summary>
+            <div>Auf Wunsch und entsprechend gesetzlicher Vorgaben (z. B. EU AI Act) – kein Problem. Wir liefern die Bilder so, wie sie zu deinem Markenauftritt und den rechtlichen Anforderungen passen.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÜBER DAS STUDIO -->
+    <section class="section section-alt about">
+      <div class="container two-col">
+        <div class="about-visual" aria-hidden="true">
+          <div class="about-art"></div>
+          <div class="about-chip"><span class="dot"></span>Studio · seit 2024</div>
+        </div>
+        <div>
+          <p class="eyebrow reveal">Über das Studio</p>
+          <h2 class="reveal">Klein, persönlich, technisch ambitioniert.</h2>
+          <p class="reveal" style="color: var(--ink-soft)">
+            LuxVision Digital ist ein kleines Team, das KI-Bildtechnik mit klassischer
+            Bildgestaltung kombiniert. Kein Agentur-Overhead, kein Account-Pingpong –
+            du sprichst direkt mit den Leuten, die deine Bilder erstellen.
+          </p>
+          <ul class="check-list" style="margin-top: 1.4rem">
+            <li class="reveal"><strong>Direkt.</strong> Eine feste Ansprechperson von Brief bis Lieferung.</li>
+            <li class="reveal"><strong>Iterativ.</strong> Feedback-Runden sind eingeplant, nicht versteckt.</li>
+            <li class="reveal"><strong>Aktuell.</strong> Wir verfolgen die Modell-Entwicklung Woche für Woche.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -544,14 +742,9 @@ input.invalid, select.invalid { border-color: #f0907a; }
               <label for="time">Uhrzeit *</label>
               <select id="time" name="time" required>
                 <option value="">Bitte wählen</option>
-                <option>09:00</option>
-                <option>10:00</option>
-                <option>11:00</option>
-                <option>13:00</option>
-                <option>14:00</option>
-                <option>15:00</option>
-                <option>16:00</option>
-                <option>17:00</option>
+                <option>09:00</option><option>10:00</option><option>11:00</option>
+                <option>13:00</option><option>14:00</option><option>15:00</option>
+                <option>16:00</option><option>17:00</option>
               </select>
               <small class="error" data-for="time"></small>
             </div>
@@ -560,9 +753,7 @@ input.invalid, select.invalid { border-color: #f0907a; }
           <div class="field">
             <label for="channel">Wie sollen wir uns melden?</label>
             <select id="channel" name="channel">
-              <option>Video-Call</option>
-              <option>Telefon</option>
-              <option>Egal</option>
+              <option>Video-Call</option><option>Telefon</option><option>Egal</option>
             </select>
           </div>
 
@@ -581,7 +772,6 @@ input.invalid, select.invalid { border-color: #f0907a; }
           <p class="form-hint">* Pflichtfeld · Die Anfrage ist unverbindlich. Wir bestätigen den Termin per E-Mail.</p>
         </form>
 
-        <!-- Success state -->
         <div class="booking-success" id="bookingSuccess" hidden>
           <div class="success-icon" aria-hidden="true">✓</div>
           <h3>Danke, <span id="successName">!</span></h3>
@@ -603,10 +793,12 @@ input.invalid, select.invalid { border-color: #f0907a; }
       </div>
       <div class="footer-col">
         <h4>Seiten</h4>
+        <a href="#vision">Vision</a>
         <a href="#leistungen">Leistungen</a>
         <a href="#galerie">Galerie</a>
-        <a href="#vorgehen">Vorgehen</a>
+        <a href="#prozess">Prozess</a>
         <a href="#preise">Preise</a>
+        <a href="#faq">FAQ</a>
         <a href="#termin">Termin buchen</a>
       </div>
       <div class="footer-col">
@@ -751,6 +943,79 @@ document.getElementById("resetBooking").addEventListener("click", () => {
   success.hidden = true;
   form.scrollIntoView({ behavior: "smooth", block: "center" });
 });
+
+/* ===================================================================
+   Cinematic scroll narrative: pinned [data-story] sections.
+   Computes section progress p (0..1) and animates child layers
+   (Vision-Reel scenes, Process journey numbers/steps).
+   =================================================================== */
+(function () {
+  if (reduceMotion) return; // respektiert Nutzer-Einstellung
+
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  // Glockenkurve: voll sichtbar in der Mitte einer Stage, weich an den Rändern
+  const bell = (p, center, half) => {
+    const d = Math.abs(p - center) / half;
+    return Math.max(0, 1 - d * d);
+  };
+
+  const stories = Array.from(document.querySelectorAll("[data-story]"));
+  if (!stories.length) return;
+
+  function updateVisionReel(frame, p) {
+    const scenes = frame.querySelectorAll(".scene");
+    const centers = [1 / 6, 3 / 6, 5 / 6]; // Mitte jeder von 3 Stages
+    scenes.forEach((scene, i) => {
+      const v = bell(p, centers[i], 0.28);
+      const scale = 0.92 + v * 0.12; // zoom in beim Eintreten, zoom out beim Verlassen
+      scene.style.opacity = v.toFixed(3);
+      scene.style.transform = `scale(${scale.toFixed(3)})`;
+    });
+  }
+
+  function updateProcess(frame, p) {
+    const nums = frame.querySelectorAll(".big-num span");
+    const steps = frame.querySelectorAll(".step");
+    const count = nums.length;
+    const centers = Array.from({ length: count }, (_, i) => (i + 0.5) / count);
+    for (let i = 0; i < count; i++) {
+      const v = bell(p, centers[i], 0.18);
+      const scale = 0.7 + v * 0.5; // 0.7 → 1.2 → 0.7
+      nums[i].style.opacity = v.toFixed(3);
+      nums[i].style.transform = `scale(${scale.toFixed(3)})`;
+      if (steps[i]) {
+        steps[i].style.opacity = v.toFixed(3);
+        steps[i].style.transform = `translateY(${((1 - v) * 24).toFixed(1)}px)`;
+      }
+    }
+  }
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const vh = window.innerHeight;
+    for (const section of stories) {
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - vh;
+      if (total <= 0) continue;
+      const p = clamp(-rect.top / total, 0, 1);
+      const frame = section.querySelector(".story-frame");
+      if (!frame) continue;
+      frame.style.setProperty("--p", p.toFixed(4));
+      if (section.classList.contains("story-vision")) updateVisionReel(frame, p);
+      else if (section.classList.contains("story-process")) updateProcess(frame, p);
+    }
+  }
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  update();
+})();
 
 </script>
 </body>
