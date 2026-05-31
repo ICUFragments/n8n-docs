@@ -5,7 +5,7 @@ on:
     branches:
       - claude/consultation-booking-site-pa2Xc
     paths:
-      - "consultation-site/**"
+      - "lux-vision/**"
       - ".github/workflows/pages-consultation.yml"
   workflow_dispatch:
 
@@ -36,7 +36,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: consultation-site
+          path: lux-vision
 
       - name: Deploy to GitHub Pages
         id: deployment
